@@ -1,0 +1,12 @@
+#BSUB -J fastqc
+#BSUB -n 6
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q q2680v2
+
+for i in 5H6-7-1 5H6-7-2 5H7-8-1 5H7-8-2 5H8-9-1 5H8-9-2 5H9-10-1 5H9-10-2 5N6-7-1 5N6-7-2 5N7-8-1 5N7-8-2 5N8-9-1 5N8-9-2 5N9-10-1 5N9-10-2 9H6-7-1 9H6-7-2 9H7-8-1 9H7-8-2 9H8-9-1 9H8-9-2 9H9-10-1 9H9-10-2 9N6-7-1 9N6-7-2 9N7-8-1 9N7-8-2 9N8-9-1 9N8-9-2 9N9-10-1 9N9-10-2
+do
+fastqc -q -t 6 --adapters /public/home/phwan/smallRNA/step1_dataQC/1.3FastQ_2/FastQC_adapter.txt -o FastQC_report/ /public/home/phwan/RNA-seq/2.Fastp_QC/clean_data/${i}/${i}_clean_1.fq.gz /public/home/phwan/RNA-seq/2.Fastp_QC/clean_data/${i}/${i}_clean_2.fq.gz
+done
+

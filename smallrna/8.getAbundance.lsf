@@ -1,0 +1,14 @@
+#BSUB -J getAbundance
+#BSUB -n 6
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q q2680v2
+
+for i in 5H6-7 5H7-8 5H8-9 5H9-10 5N6-7 5N7-8 5N8-9 5N9-10 9H6-7 9H7-8 9H8-9 9H9-10 9N6-7 9N7-8 9N8-9 9N9-10
+#for i in 9H6-7 9H7-8 9H8-9 9H9-10 9N6-7 9N7-8 9N8-9 9N9-10
+do
+mkdir -p ./${i}
+sRNAminer sRNAlocus_abundance -i /public/home/phwan/smallRNA_new/sRNAminer/3.bowtie_to_sRNAminer/Bowtie_to_sRNAminer${i}/${i}-1_mapping_last.bowtie.aln.sorted,/public/home/phwan/smallRNA_new/sRNAminer/3.bowtie_to_sRNAminer/Bowtie_to_sRNAminer${i}/${i}-2_mapping_last.bowtie.aln.sorted --sRNAlocus_file /public/home/phwan/smallRNA_new/sRNAminer/5.hc-siRNA/1.hc-siRNA_identification/step2_hcsiRNA/${i}/hcsiRNA_identification/siRNA.region -o ./${i}/${i}_siRNA_abundance.xls
+done
+

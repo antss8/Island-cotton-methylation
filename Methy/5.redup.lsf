@@ -1,0 +1,30 @@
+#BSUB -J red5H6-7
+#BSUB -n 12
+#BSUB -R "span[hosts=1]"
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q q2680v2
+
+
+
+input_dir="/public/home/phwan/Gossypium-barbadense/comparison3"
+output_dir="/public/home/phwan/Gossypium-barbadense/rededuplicate2"
+
+for i in 5H6-7-1 5H6-7-2
+do
+
+ # Deduplication step
+
+deduplicate_bismark -p --bam ${input_dir}/${i}_1_clean1_bismark_bt2_pe.bam --output_dir ${output_dir}
+
+samtools view -h ${output_dir}/${i}_1_clean1_bismark_bt2_pe.deduplicated.bam | grep -v 'Scaffold' | samtools view -bS - > ${output_dir}/${i}_reS_bismark_bt2_pe.deduplicated.bam
+
+rm ${output_dir}/${i}_1_clean1_bismark_bt2_pe.deduplicated.bam
+
+samtools sort -@ 8 -o /public/home/phwan/Gossypium-barbadense/rededuplicate2/sorted/${i}_reS_bismark_bt2_pe.sorted.deduplicated.bam /public/home/phwan/Gossypium-barbadense/rededuplicate2/${i}_reS_bismark_bt2_pe.deduplicated.bam
+
+samtools sort -@ 8 -o /public/home/phwan/Gossypium-barbadense/rededuplicate2/sorted/${i}_1_clean1_bismark_bt2_pe.sorted_nored.bam ${input_dir}/${i}_1_clean1_bismark_bt2_pe.bam
+
+
+done
+

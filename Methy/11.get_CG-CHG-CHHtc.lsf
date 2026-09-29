@@ -1,0 +1,122 @@
+#BSUB -J fS5HN
+#BSUB -n 10
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+
+
+input_path="/public/home/phwan/Gossypium-barbadense/Extractor2"
+output_path="/public/home/phwan/Gossypium-barbadense/Intersection3/All"
+
+file_pairs=(
+    "5H6-7-1 5H6-7-2"
+#    "5H7-8-1 5H7-8-2"
+#    "5H8-9-1 5H8-9-2"
+#    "5H9-10-1 5H9-10-2"
+#    "5N6-7-1 5N6-7-2"
+#    "5N7-8-1 5N7-8-2"
+#    "5N8-9-1 5N8-9-2"
+#    "5N9-10-1 5N9-10-2"
+)
+
+#file_pairs=(
+#     "9H7-8-1 9H7-8-2"
+#     "9N7-8-1 9N7-8-2"
+#)
+
+for pair in "${file_pairs[@]}"; do
+    pair_arr=($pair)
+    file1="${pair_arr[0]}"
+    file2="${pair_arr[1]}"
+
+    input_file1="${input_path}/${file1}/${file1}_filter2.CX.txt.CX_report.txt"
+    input_file2="${input_path}/${file2}/${file2}_filter2.CX.txt.CX_report.txt"
+
+    output_dir="${output_path}/${file2%-*}"
+    output_file="${output_dir}/${file2%-*}_alls2-1.txt"
+
+    mkdir -p "$output_dir"
+
+    awk '{print $1,$2,$3,$6,$7; fflush();}' "$input_file1" "$input_file2" | sort | uniq -d  > "$output_file"
+done
+
+input_path="/public/home/phwan/Gossypium-barbadense/Intersection3/All"
+output_path="/public/home/phwan/Gossypium-barbadense/Intersection3/All"
+
+file_pairs=(
+    "5H6-7 5H6-7_alls2.txt"
+    "5H7-8 5H7-8_alls2.txt"
+    "5H8-9 5H8-9_alls2.txt"
+    "5H9-10 5H9-10_alls2.txt"
+    "5N6-7 5N6-7_alls2.txt"
+    "5N7-8 5N7-8_alls2.txt"
+    "5N8-9 5N8-9_alls2.txt"
+    "5N9-10 5N9-10_alls2.txt"
+)
+
+
+for pair in "${file_pairs[@]}"; do
+    pair_arr=($pair)
+    subdir="${pair_arr[0]}"
+    input_file="${pair_arr[1]}"
+
+    input_file="${input_path}/${subdir}/${input_file}"
+
+    # Create subdirectories if they don't exist
+    mkdir -p "${output_path}/${subdir}/FSallsortCG"
+    mkdir -p "${output_path}/${subdir}/FSallsortCHG"
+    mkdir -p "${output_path}/${subdir}/FSallsortCHH"
+
+    # Sort and process CG
+    grep '\bCG\b' "$input_file" | sort -k1,1 -k2,2n > "${output_path}/${subdir}/FSallsortCG/SortCG_${subdir}.txt"
+    awk -v OFS='\t' '{
+        region=int(($2-1)/1000000);
+        start=region*1000000+1;
+        end=(region+1)*1000000;
+        counts[$1, start, end, $4]++
+        } END {
+            for (key in counts) {
+            split(key, parts, SUBSEP);
+            print parts[1], parts[2], parts[3], parts[4], counts[key]
+        }
+    }' "${output_path}/${subdir}/FSallsortCG/SortCG_${subdir}.txt" | sort -k1,1 -k2,2n > "${output_path}/${subdir}/FSallsortCG/${subdir}_SCount_all_CG.txt"
+    awk '{print $1, $2, $2}' OFS="\t" "${output_path}/${subdir}/FSallsortCG/SortCG_${subdir}.txt" > "${output_path}/${subdir}/FSallsortCG/SortCG_${subdir}.bed3"
+
+ 
+    # Sort and process CHG
+    grep 'CHG' "$input_file" | sort -k1,1 -k2,2n > "${output_path}/${subdir}/FSallsortCHG/SortCHG_${subdir}.txt"
+    awk -v OFS='\t' '{
+        region=int(($2-1)/1000000);
+        start=region*1000000+1;
+        end=(region+1)*1000000;
+        counts[$1, start, end, $4]++
+        } END {
+            for (key in counts) {
+            split(key, parts, SUBSEP);
+            print parts[1], parts[2], parts[3], parts[4], counts[key]
+        }
+    }' "${output_path}/${subdir}/FSallsortCHG/SortCHG_${subdir}.txt" | sort -k1,1 -k2,2n > "${output_path}/${subdir}/FSallsortCHG/${subdir}_SCount_all_CHG.txt"
+    awk '{print $1, $2, $2}' OFS="\t" "${output_path}/${subdir}/FSallsortCHG/SortCHG_${subdir}.txt" > "${output_path}/${subdir}/FSallsortCHG/SortCHG_${subdir}.bed3"
+
+    # Sort and process CHH
+    grep 'CHH' "$input_file" | sort -k1,1 -k2,2n > "${output_path}/${subdir}/FSallsortCHH/SortCHH_${subdir}.txt"
+    awk -v OFS='\t' '{
+        region=int(($2-1)/1000000);
+        start=region*1000000+1;
+        end=(region+1)*1000000;
+        counts[$1, start, end, $4]++
+        } END {
+            for (key in counts) {
+            split(key, parts, SUBSEP);
+            print parts[1], parts[2], parts[3], parts[4], counts[key]
+        }
+    }' "${output_path}/${subdir}/FSallsortCHH/SortCHH_${subdir}.txt" | sort -k1,1 -k2,2n > "${output_path}/${subdir}/FSallsortCHH/${subdir}_SCount_all_CHH.txt"
+    awk '{print $1, $2, $2}' OFS="\t" "${output_path}/${subdir}/FSallsortCHH/SortCHH_${subdir}.txt" > "${output_path}/${subdir}/FSallsortCHH/SortCHH_${subdir}.bed3"
+
+    # Remove intermediate files
+#    rm "${output_path}/${subdir}/FSallsortCG/SortCG_${subdir}.txt"
+#    rm "${output_path}/${subdir}/DbinomSortCHG/SortCHG_${subdir}.txt"
+#    rm "${output_path}/${subdir}/DbinomSortCHH/SortCHH_${subdir}.txt"
+done
+

@@ -1,0 +1,9 @@
+#BSUB -J perRfam
+#BSUB -n 6
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+
+cat *fa > database/Rfamdatabase.fa
+

@@ -1,0 +1,26 @@
+#BSUB -J RNAmapping
+#BSUB -n 12
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+
+#for i in 5H6-7-1 5H6-7-2 5H7-8-1 5H7-8-2 5H8-9-1 5H8-9-2 5H9-10-1 5H9-10-2 5N6-7-1 5N6-7-2 5N7-8-1 5N7-8-2 5N8-9-1 5N8-9-2 5N9-10-1 5N9-10-2 9H6-7-1 9H6-7-2 9H7-8-1 9H7-8-2 9H8-9-1 9H8-9-2 9H9-10-1 9H9-10-2 9N6-7-1 9N6-7-2 9N7-8-1 9N7-8-2 9N8-9-1 9N8-9-2 9N9-10-1 9N9-10-2
+#for i in 9H9-10-1 9H9-10-2 9N9-10-1 9N9-10-2
+#for i in 9H7-8-1 9H7-8-2
+for i in 5H8-9-1 5H8-9-2 5N8-9-1 5N8-9-2
+do
+#mkdir -p /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}
+hisat2 --new-summary -p 8 -x /public/home/phwan/RNA-seq/3.mapping/index/Gbarbadense_genome_HAU_v2.0 -1 /public/home/phwan/RNA-seq/2.Fastp_QC/clean_data/${i}/${i}_clean_1.fq.gz -2 /public/home/phwan/RNA-seq/2.Fastp_QC/clean_data/${i}/${i}_clean_2.fq.gz -S /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sam  1>/public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}.log 2>&1
+
+grep -v "Scaffold" /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sam | samtools view -@8 -b /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sam > /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.bam | samtools sort -@8 -n /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.bam -o /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sorted.bam
+
+rm /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sorted.bam
+
+grep -v "Scaffold" /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sam |   
+samtools view -@8 -b - |   
+samtools sort -@8 -o /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sorted.bam
+rm /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sam
+mv /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sorted.bam /public/home/phwan/Gossypium-barbadense/DFR_igv/Gbar_A06G000690/RNA-seq
+done
+

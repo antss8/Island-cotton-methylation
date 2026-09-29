@@ -1,0 +1,8 @@
+#BSUB -J index
+#BSUB -n 12
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+
+hisat2-build /public/home/phwan/RNA-seq/3.mapping/index/Gbarbadense_genome_HAU_v2.0.fasta /public/home/phwan/RNA-seq/3.mapping/index/Gbarbadense_genome_HAU_v2.0 

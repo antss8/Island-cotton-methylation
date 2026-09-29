@@ -1,0 +1,97 @@
+#BSUB -J ctCG5H
+#BSUB -n 1
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q q2680v2
+
+parent_dir="/public/home/phwan/Gossypium-barbadense/Intersection2"
+output_dir="/public/home/phwan/Gossypium-barbadense/Intersection2/CG"
+
+
+for i in 5H8-9; 
+do
+    input_dir1="${parent_dir}/All/${i}/FSallsortCG"
+    input_dir2="${parent_dir}/dbinom/${i}/DbinomSortCG"
+    output="${output_dir}/${i}"
+
+     mkdir -p "$output"
+
+    awk 'BEGIN { FS=OFS="\t" }
+        NR == FNR { 
+            key = $1 FS $2 FS $3;
+            values[key] = $5;
+            next;
+        }
+        {
+            key = $1 FS $2 FS $3;
+            if (key in values && values[key] != 0) {
+                print $1, $2, $3, $5 / values[key];
+            }
+        }
+    ' "${input_dir1}/${i}_SCount_all_CG.txt" "${input_dir2}/${i}_SCount_dbinom_CG.txt" > "${output}/${i}_calculateCG.txt"
+done
+
+
+parent_dir="/public/home/phwan/Gossypium-barbadense/Intersection2"
+output_dir="/public/home/phwan/Gossypium-barbadense/Intersection2/CHG"
+
+
+
+
+
+for i in 5H8-9; 
+do
+    input_dir1="${parent_dir}/All/${i}/FSallsortCHG"
+    input_dir2="${parent_dir}/dbinom/${i}/DbinomSortCHG"
+    output="${output_dir}/${i}"
+
+     mkdir -p "$output"
+
+    awk 'BEGIN { FS=OFS="\t" }
+        NR == FNR { 
+            key = $1 FS $2 FS $3;
+            values[key] = $5;
+            next;
+        }
+        {
+            key = $1 FS $2 FS $3;
+            if (key in values && values[key] != 0) {
+                print $1, $2, $3, $5 / values[key];
+            }
+        }
+    ' "${input_dir1}/${i}_SCount_all_CHG.txt" "${input_dir2}/${i}_SCount_dbinom_CHG.txt" > "${output}/${i}_calculateCHG.txt"
+done
+
+
+
+parent_dir="/public/home/phwan/Gossypium-barbadense/Intersection2"
+output_dir="/public/home/phwan/Gossypium-barbadense/Intersection2/CHH"
+
+
+
+
+
+for i in 5H8-9; 
+do
+    input_dir1="${parent_dir}/All/${i}/FSallsortCHH"
+    input_dir2="${parent_dir}/dbinom/${i}/DbinomSortCHH"
+    output="${output_dir}/${i}"
+
+     mkdir -p "$output"
+
+    awk 'BEGIN { FS=OFS="\t" }
+        NR == FNR { 
+            key = $1 FS $2 FS $3;
+            values[key] = $5;
+            next;
+        }
+        {
+            key = $1 FS $2 FS $3;
+            if (key in values && values[key] != 0) {
+                print $1, $2, $3, $5 / values[key];
+            }
+        }
+    ' "${input_dir1}/${i}_SCount_all_CHH.txt" "${input_dir2}/${i}_SCount_dbinom_CHH.txt" > "${output}/${i}_calculateCHH.txt"
+done
+

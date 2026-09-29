@@ -1,0 +1,17 @@
+#BSUB -J getsrna
+#BSUB -n 6
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q q2680v2
+
+for i in 5H6-7
+do
+sRNAminer bowtie_to_sRNAminer -i /public/home/phwan/smallRNA_new/6.mapping/${i}-1_mapping,/public/home/phwan/smallRNA_new/6.mapping/${i}-2_mapping -o ./
+
+sRNAminer Reads_mapping -i /public/home/phwan/smallRNA_new/5.No_Rfam_data/clean_fa/${i}-1_clean.fa,/public/home/phwan/smallRNA_new/5.No_Rfam_data/clean_fa/${i}-2_clean.fa -g /public/home/phwan/smallRNA/sRNAminer/Bowtie/Gbarbadense_genome/Gbarbadense_genome_HAU_v2.0.fasta --index /public/home/phwan/smallRNA/sRNAminer/Bowtie/Gbarbadense_genome -o ./
+done
+
+
+
+

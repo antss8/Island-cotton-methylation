@@ -1,0 +1,8 @@
+#BSUB -J c13-1
+#BSUB -n 5
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q q2680v2
+
+bismark_genome_preparation --verbose --bowtie2 /public/home/phwan/Gossypium-barbadense/mapping2

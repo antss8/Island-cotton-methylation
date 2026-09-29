@@ -1,0 +1,23 @@
+#BSUB -J gzip
+#BSUB -n 6
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q q2680v2
+
+#input_dir="/public/home/phwan/Gossypium-barbadense/rededuplicate2"
+#output_dir="/public/home/phwan/Gossypium-barbadense/Extractor2"
+#for i in 5H6-7-1 5H6-7-2
+#do
+#mkdir -p /public/home/phwan/Gossypium-barbadense/Extractor2/${i}
+    #Extractor
+    
+#bismark_methylation_extractor --paired-end --gzip --no_overlap --report --comprehensive --bedGraph --CX_context --ignore 3 --ignore_r2 5 --buffer_size 10G --cytosine_report --multicore 10 --genome_folder /public/home/phwan/Gossypium-barbadense/mapping2 -o ${output_dir}/${i} ${input_dir}/${i}_reS_bismark_bt2_pe.deduplicated.bam
+
+    #coverage2cytosine
+         
+#coverage2cytosine --dir ${output_dir}/${i} -o ${i}.CX.txt --genome_folder /public/home/phwan/Gossypium-barbadense/mapping2 --CX_context ${output_dir}/${i}/${i}_reS_bismark_bt2_pe.deduplicated.bismark.cov.gz
+
+#done
+
+find /public/home/phwan/Gossypium-barbadense/Extractor2 -type f -name "*.txt" -exec gzip {} \;

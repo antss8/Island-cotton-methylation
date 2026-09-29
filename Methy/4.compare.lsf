@@ -1,0 +1,18 @@
+#BSUB -J c5H6
+#BSUB -n 12
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q smp
+#BSUB -M 200GB
+
+input_dir="/public/home/phwan/Gossypium-barbadense/Rawdata/clean1"
+output_dir="/public/home/phwan/Gossypium-barbadense/comparison3"
+
+for i in 5H6-7-1 5H6-7-2 
+do
+
+bismark /public/home/phwan/Gossypium-barbadense/mapping2 --bowtie2 --non_directional -p 10 -N 1 -L 30 -1 ${input_dir}/${i}/${i}_1_clean1.fastq.gz -2 ${input_dir}/${i}/${i}_2_clean2.fastq.gz -o /public/home/phwan/Gossypium-barbadense/comparison3 >${input_dir}/${i}/${i}.mapping.log 2>${input_dir}/${i}/err.${i}.log
+
+done
+

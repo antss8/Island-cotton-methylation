@@ -1,0 +1,14 @@
+#BSUB -J RNAclean
+#BSUB -n 12
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+
+for i in 5H6-7-1 5H6-7-2 5H7-8-1 5H7-8-2 5H8-9-1 5H8-9-2 5H9-10-1 5H9-10-2 5N6-7-1 5N6-7-2 5N7-8-1 5N7-8-2 5N8-9-1 5N8-9-2 5N9-10-1 5N9-10-2 9H6-7-1 9H6-7-2 9H7-8-1 9H7-8-2 9H8-9-1 9H8-9-2 9H9-10-1 9H9-10-2 9N6-7-1 9N6-7-2 9N7-8-1 9N7-8-2 9N8-9-1 9N8-9-2 9N9-10-1 9N9-10-2
+do
+
+mkdir -p /public/home/phwan/RNA-seq/2.Fastp_QC/clean_data/${i}
+
+fastp -i /public/home/phwan/data_240826/F22FTSCCKF13768_GOSywzmT/soapnuke/clean/${i}/${i}_1.fq.gz -I /public/home/phwan/data_240826/F22FTSCCKF13768_GOSywzmT/soapnuke/clean/${i}/${i}_2.fq.gz -o /public/home/phwan/RNA-seq/2.Fastp_QC/clean_data/${i}/${i}_clean_1.fq.gz -O /public/home/phwan/RNA-seq/2.Fastp_QC/clean_data/${i}/${i}_clean_2.fq.gz -h /public/home/phwan/RNA-seq/2.Fastp_QC/clean_data/${i}/${i}.html -j /public/home/phwan/RNA-seq/2.Fastp_QC/clean_data/${i}/${i}.json
+done

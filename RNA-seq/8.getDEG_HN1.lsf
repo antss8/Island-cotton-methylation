@@ -1,0 +1,9 @@
+#BSUB -J getrnadiff
+#BSUB -n 2
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+
+perl /public/home/phwan/miniconda3/opt/trinity-2.11.0/Analysis/DifferentialExpression/run_DE_analysis.pl --matrix /public/home/phwan/RNA-seq/5.merge/no9H8-9-2/gene_count_matrix.txt --method DESeq2 --samples_file samplegroup.txt --contrast contrast.txt
+

@@ -1,0 +1,40 @@
+#BSUB -J geneCG
+#BSUB -n 6
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q q2680v2
+
+for i in 5HN6-7 5HN7-8 5HN8-9 5HN9-10 9HN6-7 9HN7-8 9HN8-9 9HN9-10
+do
+bedtools intersect -a /public/home/zhfan/WPH/Gbar3-79/3.DMR/DMR/DMR_methylation_level/${i}_CGDMR/${i}_CGDMR_CG_DMR_all.txt -b /public/home/phwan/Gossypium-barbadense/Gene_distribution/Per/sorted_genome_feature.bed6 -bed -wa -wb > /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CG/${i}_DMR-Gene.txt
+
+awk -v OFS='\t' '{print $1,$2,$3,$4,$5,$6,$7,$13}' /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CG/${i}_DMR-Gene.txt > /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CG/GeneID/${i}_GeneID.txt
+
+awk -v OFS='\t' '!seen[$8]++' /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CG/GeneID/${i}_GeneID.txt | sort -k1,1 -k2,2n > /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CG/GeneID/${i}_GeneID_unique.txt
+
+rm /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CG/GeneID/${i}_GeneID.txt
+done
+
+
+for i in 5HN6-7 5HN7-8 5HN8-9 5HN9-10 9HN6-7 9HN7-8 9HN8-9 9HN9-10
+do
+bedtools intersect -a /public/home/zhfan/WPH/Gbar3-79/3.DMR/DMR/DMR_methylation_level/${i}_CHGDMR/${i}_CHGDMR_CHG_DMR_all.txt -b /public/home/phwan/Gossypium-barbadense/Gene_distribution/Per/sorted_genome_feature.bed6 -bed -wa -wb > /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHG/${i}_DMR-Gene.txt
+
+awk -v OFS='\t' '{print $1,$2,$3,$4,$5,$6,$7,$13}' /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHG/${i}_DMR-Gene.txt > /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHG/GeneID/${i}_GeneID.txt
+
+awk -v OFS='\t' '!seen[$8]++' /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHG/GeneID/${i}_GeneID.txt | sort -k1,1 -k2,2n > /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHG/GeneID/${i}_GeneID_unique.txt
+
+rm /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHG/GeneID/${i}_GeneID.txt
+done
+
+for i in 5HN6-7 5HN7-8 5HN8-9 5HN9-10 9HN6-7 9HN7-8 9HN8-9 9HN9-10
+do
+bedtools intersect -a /public/home/zhfan/WPH/Gbar3-79/3.DMR/DMR/DMR_methylation_level/${i}_CHHDMR/${i}_CHHDMR_CHH_DMR_all.txt -b /public/home/phwan/Gossypium-barbadense/Gene_distribution/Per/sorted_genome_feature.bed6 -bed -wa -wb > /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHH/${i}_DMR-Gene.txt
+
+awk -v OFS='\t' '{print $1,$2,$3,$4,$5,$6,$7,$13}' /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHH/${i}_DMR-Gene.txt > /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHH/GeneID/${i}_GeneID.txt
+
+awk -v OFS='\t' '!seen[$8]++' /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHH/GeneID/${i}_GeneID.txt | sort -k1,1 -k2,2n > /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHH/GeneID/${i}_GeneID_unique.txt
+
+rm /public/home/zhfan/WPH/Gbar3-79/4.DMG/DMRAnno/CHH/GeneID/${i}_GeneID.txt
+done

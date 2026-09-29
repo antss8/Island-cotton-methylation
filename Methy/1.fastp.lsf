@@ -1,0 +1,10 @@
+#BSUB -J f_5H6-7-1
+#BSUB -n 5
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+
+
+fastp -i /public/home/phwan/data_231208/F22FTSCCKF13768_GOSmohnH/soapnuke/clean/5H6-7-1/V350133458_L01_GOSmohnH011196-13_1.fq.gz -I /public/home/phwan/data_231208/F22FTSCCKF13768_GOSmohnH/soapnuke/clean/5H6-7-1/V350133458_L01_GOSmohnH011196-13_2.fq.gz -o /public/home/phwan/Gossypium-barbadense/Rawdata/clean1/5H6-7-1/5H6-7-1_L1_13_1_clean1.fastq.gz -O /public/home/phwan/Gossypium-barbadense/Rawdata/clean1/5H6-7-1/5H6-7-1_L1_13_2_clean2.fastq.gz --length_required 50 --qualified_quality_phred 30
+

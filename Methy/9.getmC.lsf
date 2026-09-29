@@ -1,0 +1,47 @@
+#BSUB -J 59Sort
+#BSUB -n 2
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+
+
+input_path="/public/home/phwan/Gossypium-barbadense/Intersection2/dbinom"
+output_path="/public/home/phwan/Gossypium-barbadense/Intersection2/dbinom"
+
+file_pairs=(
+    "5H6-7 5H6-7_dbinomI2.txt"
+    "5H7-8 5H7-8_dbinomI2.txt"
+    "5H8-9 5H8-9_dbinomI2.txt"
+    "5H9-10 5H9-10_dbinomI2.txt"
+    "5N6-7 5N6-7_dbinomI2.txt"
+    "5N7-8 5N7-8_dbinomI2.txt"
+    "5N8-9 5N8-9_dbinomI2.txt"
+    "5N9-10 5N9-10_dbinomI2.txt"
+    "9H6-7 9H6-7_dbinomI2.txt"
+    "9H7-8 9H7-8_dbinomI2.txt"
+    "9H8-9 9H8-9_dbinomI2.txt"
+    "9H9-10 9H9-10_dbinomI2.txt"
+    "9N6-7 9N6-7_dbinomI2.txt"
+    "9N7-8 9N7-8_dbinomI2.txt"
+    "9N8-9 9N8-9_dbinomI2.txt"
+    "9N9-10 9N9-10_dbinomI2.txt"
+
+
+)
+
+for pair in "${file_pairs[@]}"; do
+    pair_arr=($pair)
+    subdir="${pair_arr[0]}"
+    input_file="${pair_arr[1]}"
+
+    input_file="${input_path}/${subdir}/${input_file}"
+
+    # Create subdirectories if they don't exist
+    mkdir -p "${output_path}/${subdir}/DbinomSort"
+
+    # Sort
+    sort -k1,1 -k2,2n "$input_file" > "${output_path}/${subdir}/DbinomSort/${subdir}_Sorted2.txt"
+
+done
+

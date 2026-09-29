@@ -1,0 +1,59 @@
+#BSUB -J DMR5HNCHG
+#BSUB -n 5
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+
+for i in 5HN6-7 5HN7-8 5HN8-9 5HN9-10
+do
+
+Rscript /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/get_fishertest.R /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/${i}_CHG_Fisherlast.txt /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/${i}_CHGFisher_result.txt
+
+awk '$4 < 0.05 && $4 != "NaN" {print}' OFS="\t" /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/${i}_CHGFisher_result.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/${i}_CHG_FDRper.txt
+
+sort -t $'\t' -k 4,4n /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/${i}_CHG_FDRper.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_${i}_CHG_FDRper.txt
+
+Rscript /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/get_FDR.R /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_${i}_CHG_FDRper.txt /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/${i}_CHG_FDR_result.txt
+
+rm /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_${i}_CHG_FDRper.txt
+
+sort -t $'\t' -k 1,1 -k 2,2n /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/${i}_CHG_FDR_result.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_last/${i}_CHGFDR_sorted.txt
+
+cut -f1-3 -d$'\t' /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_last/${i}_CHGFDR_sorted.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_last/bed3/${i}_CHGFDR_sorted.bed3
+done
+
+for i in 5HN6-7 5HN7-8 5HN8-9 5HN9-10
+do
+
+Rscript /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/get_fishertest.R /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/${i}_CHG_Fisherlast.txt /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/${i}_CHGFisher_result.txt
+
+awk '$4 < 0.05 && $4 != "NaN" {print}' OFS="\t" /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/${i}_CHGFisher_result.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/${i}_CHG_FDRper.txt
+
+sort -t $'\t' -k 4,4n /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/${i}_CHG_FDRper.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_${i}_CHG_FDRper.txt
+
+Rscript /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/get_FDR.R /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_${i}_CHG_FDRper.txt /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/${i}_CHG_FDR_result.txt
+
+rm /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_${i}_CHG_FDRper.txt
+
+sort -t $'\t' -k 1,1 -k 2,2n /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/${i}_CHG_FDR_result.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_last/${i}_CHGFDR_sorted.txt
+
+cut -f1-3 -d$'\t' /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_last/${i}_CHGFDR_sorted.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHG/ReallyDMR/FDR/sorted_last/bed3/${i}_CHGFDR_sorted.bed3
+done
+
+
+Rscript /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/get_fishertest.R /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/${i}_CHH_Fisherlast.txt /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/${i}_CHHFisher_result.txt
+
+awk '$4 < 0.05 && $4 != "NaN" {print}' OFS="\t" /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/${i}_CHHFisher_result.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/${i}_CHH_FDRper.txt
+
+sort -t $'\t' -k 4,4n /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/${i}_CHH_FDRper.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/FDR/sorted_${i}_CHH_FDRper.txt
+
+Rscript /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/get_FDR.R /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/FDR/sorted_${i}_CHH_FDRper.txt /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/FDR/${i}_CHH_FDR_result.txt
+
+rm /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/FDR/sorted_${i}_CHH_FDRper.txt
+
+sort -t $'\t' -k 1,1 -k 2,2n /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/FDR/${i}_CHH_FDR_result.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/FDR/sorted_last/${i}_CHHFDR_sorted.txt
+
+cut -f1-3 -d$'\t' /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/FDR/sorted_last/${i}_CHHFDR_sorted.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/P-Result/CHH/ReallyDMR/FDR/sorted_last/bed3/${i}_CHHFDR_sorted.bed3
+done
+

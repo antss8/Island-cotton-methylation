@@ -1,0 +1,121 @@
+#BSUB -J bed5H6-7
+#BSUB -n 6
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q normal
+for i in 5H6-7
+do
+sort -k1,1 -k2,2n /public/home/phwan/Gossypium-barbadense/Intersection3/All/${i}/${i}_alls2.txt | awk '{print $1 "\t" $2 "\t" $2}' > /public/home/zhfan/WPH/Gbar3-79/1.XH35_Su11_tC.bed/${i}_alls2.bed3
+done
+
+#Step1
+for i in 5H6-7 
+do
+bedtools coverage -a All_win_200.txt -b /public/home/zhfan/WPH/Gbar3-79/1.XH35_Su11_tC.bed/${i}_alls2.bed3 | awk -v OFS='\t' '$4 >= 10 {print $1, $2, $3, $4}' > /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/${i}_winper.txt
+done
+
+awk -v OFS='\t' '{print $1, $2, $3}' /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/5N6-7_winper.txt > /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/tmp1.txt
+awk -v OFS='\t' '{print $1, $2, $3}' /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/5H6-7_winper.txt > /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/tmp2.txt
+cat /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/tmp1.txt /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/tmp2.txt | sort -t $'\t' -k 1,1 -k 2,2n | uniq -d > /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/5HN6-7_win.bed
+rm /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/tmp1.txt /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN6-7/tmp2.txt
+
+for i in 6-7 7-8 8-9 9-10
+do
+mkdir -p /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/mC_Count/5H${i}
+
+bedtools coverage -a /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN${i}/5HN${i}_win.bed -b /public/home/phwan/Gossypium-barbadense/Intersection2/dbinom/5H${i}/DbinomSortCG/SortCG_5H${i}.bed3 |  awk -v OFS='\t' '{print $1, $2, $3, $4}'  > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/mC_Count/5H${i}/5H${i}_mc_CG.txt
+
+done
+
+for i in 6-7 7-8 8-9 9-10
+do
+mkdir -p /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/tC_Count/5H${i}
+
+bedtools coverage -iobuf 500M -a /public/home/zhfan/WPH/Gbar3-79/2.DMR_winper/5HN${i}/5HN${i}_win.bed -b /public/home/phwan/Gossypium-barbadense/Intersection3/All/5H${i}/FSallsortCG/SortCG_5H${i}.bed3 |  awk -v OFS='\t' '{print $1, $2, $3, $4}'  > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/tC_Count/5H${i}/5H${i}_tc_CG.txt
+
+done
+
+#!/bin/bash
+
+base_dir="/public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT"
+output_dir="/public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/CG"
+mkdir -p "$output_dir"  
+
+
+for i in 6-7 7-8 8-9 9-10; do
+  
+    mC_5H="${base_dir}/mC_Count/5H${i}/5H${i}_mc_CG.txt"
+    mC_5N="${base_dir}/mC_Count/5N${i}/5N${i}_mc_CG.txt"
+    tC_5H="${base_dir}/tC_Count/5H${i}/5H${i}_tc_CG.txt"
+    tC_5N="${base_dir}/tC_Count/5N${i}/5N${i}_tc_CG.txt"
+    
+
+    output_file="${output_dir}/5HN${i}_CG_Fisherper.txt"
+    
+
+    paste \
+        <(cut -f1-4 "$mC_5H") \
+        <(cut -f4 "$mC_5N") \
+        <(cut -f4 "$tC_5H") \
+        <(cut -f4 "$tC_5N") \
+        > "$output_file"
+awk '($6 != 0 && $7 != 0) && !($4 == 0 && $5 == 0)' /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/CG/5HN${i}_CG_Fisherper.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/5HN${i}_CG_Fisherlast.txt
+
+done
+
+#!/bin/bash
+
+base_dir="/public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT"
+output_dir="/public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/CHG"
+mkdir -p "$output_dir" 
+
+
+for i in 6-7 7-8 8-9 9-10; do
+
+    mC_5H="${base_dir}/mC_Count/5H${i}/5H${i}_mc_CHG.txt"
+    mC_5N="${base_dir}/mC_Count/5N${i}/5N${i}_mc_CHG.txt"
+    tC_5H="${base_dir}/tC_Count/5H${i}/5H${i}_tc_CHG.txt"
+    tC_5N="${base_dir}/tC_Count/5N${i}/5N${i}_tc_CHG.txt"
+    
+
+    output_file="${output_dir}/5HN${i}_CHG_Fisherper.txt"
+    
+
+    paste \
+        <(cut -f1-4 "$mC_5H") \
+        <(cut -f4 "$mC_5N") \
+        <(cut -f4 "$tC_5H") \
+        <(cut -f4 "$tC_5N") \
+        > "$output_file"
+awk '($6 != 0 && $7 != 0) && !($4 == 0 && $5 == 0)' /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/CHG/5HN${i}_CHG_Fisherper.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/5HN${i}_CHG_Fisherlast.txt
+
+done
+
+#!/bin/bash
+
+base_dir="/public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT"
+output_dir="/public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/CHH"
+mkdir -p "$output_dir" 
+
+
+for i in 6-7 7-8 8-9 9-10; do
+
+    mC_5H="${base_dir}/mC_Count/5H${i}/5H${i}_mc_CHH.txt"
+    mC_5N="${base_dir}/mC_Count/5N${i}/5N${i}_mc_CHH.txt"
+    tC_5H="${base_dir}/tC_Count/5H${i}/5H${i}_tc_CHH.txt"
+    tC_5N="${base_dir}/tC_Count/5N${i}/5N${i}_tc_CHH.txt"
+    
+
+    output_file="${output_dir}/5HN${i}_CHH_Fisherper.txt"
+    
+
+    paste \
+        <(cut -f1-4 "$mC_5H") \
+        <(cut -f4 "$mC_5N") \
+        <(cut -f4 "$tC_5H") \
+        <(cut -f4 "$tC_5N") \
+        > "$output_file"
+awk '($6 != 0 && $7 != 0) && !($4 == 0 && $5 == 0)' /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/CHH/5HN${i}_CHH_Fisherper.txt > /public/home/zhfan/WPH/Gbar3-79/3.DMR/PerTXT/Fisher_exact_test/Per/5HN${i}_CHH_Fisherlast.txt
+
+done

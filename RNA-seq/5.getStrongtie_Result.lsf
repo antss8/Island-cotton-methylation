@@ -1,0 +1,12 @@
+#BSUB -J RNAdingliang
+#BSUB -n 8
+#BSUB -R span[hosts=1]
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q q2680v2
+
+for i in 5H6-7-1 5H6-7-2 5H7-8-1 5H7-8-2 5H8-9-1 5H8-9-2 5H9-10-1 5H9-10-2 5N6-7-1 5N6-7-2 5N7-8-1 5N7-8-2 5N8-9-1 5N8-9-2 5N9-10-1 5N9-10-2 9H6-7-1 9H6-7-2 9H7-8-1 9H7-8-2 9H8-9-1 9H8-9-2 9H9-10-1 9H9-10-2 9N6-7-1 9N6-7-2 9N7-8-1 9N7-8-2 9N8-9-1 9N8-9-2 9N9-10-1 9N9-10-2
+do
+mkdir -p /public/home/phwan/RNA-seq/4.Quantification/${i}
+stringtie -p 8 -G /public/home/phwan/RNA-seq/1.Ref/Gbarbadense_gene_model_ensembl.gtf -e -B -o /public/home/phwan/RNA-seq/4.Quantification/${i}/${i}_transcripts.gtf -A /public/home/phwan/RNA-seq/4.Quantification/${i}/${i}_gene_abundances.tsv /public/home/phwan/RNA-seq/3.mapping/mapping_result/${i}/${i}_clean.sorted.bam
+done
